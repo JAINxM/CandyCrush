@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Candy Crush Match-3</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <main id="mapView" class="map-view">
+        <h1 class="map-title">Levels</h1>
+        <div id="levelGrid" class="level-grid">
+            <!-- Level buttons populated dynamically -->
+        </div>
+    </main>
+    <main id="gameShell" class="game-shell hidden">
+        <section class="hud">
+            <div class="hud-item" id="targetHudItem">
+                <span class="label">Objective</span>
+                <div id="target" class="target-display">2000</div>
+            </div>
+            <div class="hud-item">
+                <span class="label">Score</span>
+                <span id="score">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">Moves</span>
+                <span id="moves">20</span>
+            </div>
+        </section>
+
+        <section class="control-pad" aria-label="Game Controls">
+            <button id="homeBtn" class="candy-btn blue" type="button">
+                <span class="txt">Home</span>
+            </button>
+            <button id="playBtn" class="candy-btn pink" type="button">
+                <span class="txt">Play</span>
+            </button>
+            <button id="pauseBtn" class="candy-btn purple" type="button">
+                <span class="txt">Pause</span>
+            </button>
+            <button id="restartBtn" class="candy-btn blue" type="button">
+                <span class="txt">Restart</span>
+            </button>
+            <button id="settingsBtn" class="candy-btn purple" type="button">
+                <span class="txt">Settings</span>
+            </button>
+        </section>
+
+        <section class="board-wrap">
+            <div id="board" class="board" aria-label="Candy Crush Board"></div>
+            <div id="levelStart" class="overlay hidden">
+                <div class="overlay-card">
+                    <h2 id="levelTitle">Level 1</h2>
+                    <p id="levelDesc" class="desc-text">Reach 2000 points!</p>
+                    <button id="startLevelBtn" type="button" class="candy-btn blue">
+                        <span class="txt">Start Level</span>
+                    </button>
+                </div>
+            </div>
+            <div id="gameOver" class="overlay hidden">
+                <div class="overlay-card">
+                    <h2>Game Over</h2>
+                    <p>Final Score: <strong id="finalScore">0</strong></p>
+                    <button id="playAgainBtn" type="button" class="candy-btn pink">
+                        <span class="txt">Continue</span>
+                    </button>
+                </div>
+            </div>
+            <div id="settingsOverlay" class="overlay hidden">
+                <div class="overlay-card">
+                    <h2>Settings</h2>
+                    <br>
+                    <button id="soundToggleBtn" class="candy-btn pink" type="button"
+                        style="width: 100%; margin-bottom: 20px;">
+                        <span class="txt">Sound: ON</span>
+                    </button>
+                    <br>
+                    <button id="closeSettingsBtn" class="candy-btn blue" type="button">
+                        <span class="txt">Close</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
