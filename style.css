@@ -55,7 +55,7 @@ body {
 .map-title {
   font-size: 3rem;
   color: #fff;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   margin-bottom: 20px;
 }
 
@@ -121,6 +121,8 @@ body {
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+  width: var(--board-size);
+  justify-self: center;
 }
 
 .hud-item {
@@ -206,14 +208,21 @@ button:active {
 
 .control-pad {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
   justify-content: center;
   background: var(--panel);
   border: 1px solid var(--stroke);
   border-radius: 16px;
-  padding: 12px;
+  padding: 10px;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+  width: var(--board-size);
+  justify-self: center;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for cleaner look */
+}
+.control-pad::-webkit-scrollbar {
+  display: none;
 }
 
 .candy-btn {
@@ -239,8 +248,10 @@ button:active {
     0 12px 18px var(--btn-shadow),
     inset 0 -2px 6px rgba(0, 0, 0, 0.24);
   transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
-  min-width: 120px;
+  min-width: 60px;
+  flex: 1;
   justify-content: center;
+  padding: 8px 4px;
 }
 
 .candy-btn::before {
@@ -380,8 +391,10 @@ button:active {
   justify-content: flex-start;
   align-content: flex-start;
   position: relative;
-  touch-action: none; /* Prevent scrolling while playing */
-  user-select: none;   /* Prevent text selection */
+  touch-action: none;
+  /* Prevent scrolling while playing */
+  user-select: none;
+  /* Prevent text selection */
   -webkit-user-select: none;
 }
 
@@ -675,16 +688,22 @@ button:active {
   }
 
   .hud {
-    padding: 10px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .hud-item {
+    flex: 1;
+    min-width: 0;
   }
 
   .label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
   #score,
-  #timer {
-    font-size: 1.15rem;
+  #moves {
+    font-size: 1.1rem;
   }
 
   button {
@@ -692,16 +711,19 @@ button:active {
   }
 
   .control-pad {
-    gap: 8px;
-    padding: 10px;
+    gap: 4px;
+    padding: 8px;
+    flex-wrap: nowrap;
   }
 
   .candy-btn {
     min-width: 0;
-    flex: 1 1 46%;
+    flex: 1;
+    padding: 6px 2px;
+    min-height: 40px;
   }
 
   .candy-btn .txt {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
   }
 }

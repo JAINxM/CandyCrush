@@ -48,8 +48,8 @@ function loadProgress() {
         if (saved) {
             playerProgress = JSON.parse(saved);
         }
-    } catch(e) {}
-    
+    } catch (e) { }
+
     // Ensure at least first level is unlocked
     if (!playerProgress[0]) {
         playerProgress[0] = { stars: 0, unlocked: true };
@@ -59,7 +59,7 @@ function loadProgress() {
 function saveProgress() {
     try {
         localStorage.setItem("candyProgress", JSON.stringify(playerProgress));
-    } catch(e) {}
+    } catch (e) { }
 }
 
 const mapView = document.getElementById("mapView");
@@ -732,7 +732,7 @@ function initAudio() {
     }
 }
 
-function playTone(freq, type, duration, vol=0.05) {
+function playTone(freq, type, duration, vol = 0.05) {
     if (!audioCtx || !soundEnabled) return;
     try {
         const osc = audioCtx.createOscillator();
@@ -746,7 +746,7 @@ function playTone(freq, type, duration, vol=0.05) {
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
+    } catch (e) { }
 }
 
 function playSwapSound() {
@@ -819,26 +819,26 @@ async function shuffleBoard() {
     boardEl.appendChild(msg);
     await wait(600);
     if (msg.parentNode) msg.parentNode.removeChild(msg);
-    
+
     // Collect all candy data and shuffle it
     const candies = [];
     for (let row = 0; row < BOARD_SIZE; row++)
         for (let col = 0; col < BOARD_SIZE; col++)
             if (board[row][col]) candies.push(board[row][col]);
-    
+
     // Fisher-Yates shuffle
     for (let i = candies.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [candies[i], candies[j]] = [candies[j], candies[i]];
     }
-    
+
     let idx = 0;
     for (let row = 0; row < BOARD_SIZE; row++)
         for (let col = 0; col < BOARD_SIZE; col++)
             if (board[row][col]) board[row][col] = candies[idx++];
-    
+
     renderAll();
-    
+
     // Recursively shuffle until there's a valid move
     if (!hasPossibleMove()) await shuffleBoard();
 }
@@ -853,7 +853,7 @@ async function checkAndShuffle() {
 function checkWinLoss() {
     if (!gameActive) return;
     let isWin = false;
-    
+
     if (levelState.type === 'score') {
         if (score >= currentTarget) isWin = true;
     } else if (levelState.type === 'collect') {
@@ -904,7 +904,7 @@ async function resolveCascades(initialClear = null) {
         }).length;
 
         await animateClear(clearSet);
-        
+
         // Track collected colors
         if (levelState.type === 'collect') {
             clearSet.forEach((k) => {
@@ -919,7 +919,7 @@ async function resolveCascades(initialClear = null) {
 
         applySpecialSpawns(spawnPlan, clearSet);
         applyScore(clearSet.size, specialTriggers, comboStep);
-        
+
         if (comboStep > 1) {
             showComboMessage(comboStep);
         }
@@ -928,7 +928,7 @@ async function resolveCascades(initialClear = null) {
         const moved = collapseAndRefill();
         await animateFall(moved);
         renderAll();
-        
+
         if (comboStep > 1) {
             playComboSound(comboStep);
         } else {
@@ -1026,7 +1026,7 @@ function onTouchStart(event) {
     const touch = event.touches[0];
     const cell = touch.target.closest(".cell");
     if (!cell) return;
-    
+
     dragSource = { row: Number(cell.dataset.row), col: Number(cell.dataset.col) };
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
@@ -1041,26 +1041,26 @@ function onTouchMove(event) {
 function onTouchEnd(event) {
     if (!touchActive || !dragSource) return;
     touchActive = false;
-    
+
     const touch = event.changedTouches[0];
     const endX = touch.clientX;
     const endY = touch.clientY;
-    
+
     const dx = endX - touchStartX;
     const dy = endY - touchStartY;
-    
+
     // Minimum distance to count as a deliberate swipe (threshold)
-    const threshold = 20; 
-    
+    const threshold = 20;
+
     if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
         // Just a tap? We could handle click-to-swap here if needed.
         dragSource = null;
         return;
     }
-    
+
     let targetRow = dragSource.row;
     let targetCol = dragSource.col;
-    
+
     if (Math.abs(dx) > Math.abs(dy)) {
         // Horizontal swipe
         targetCol += dx > 0 ? 1 : -1;
@@ -1068,11 +1068,11 @@ function onTouchEnd(event) {
         // Vertical swipe
         targetRow += dy > 0 ? 1 : -1;
     }
-    
+
     if (inBounds(targetRow, targetCol)) {
         attemptSwap(dragSource, { row: targetRow, col: targetCol });
     }
-    
+
     dragSource = null;
 }
 
@@ -1090,12 +1090,12 @@ function renderMap() {
         const prog = playerProgress[index] || { stars: 0, unlocked: false };
         const btn = document.createElement("div");
         btn.className = "level-btn" + (prog.unlocked ? "" : " locked");
-        
-        
+
+
         btn.innerHTML = `
             <span class="level-num">${levelData.level}</span>
         `;
-        
+
         if (prog.unlocked) {
             btn.addEventListener("click", () => {
                 mapView.classList.add("hidden");
@@ -1103,7 +1103,7 @@ function renderMap() {
                 loadLevel(index);
             });
         }
-        
+
         levelGrid.appendChild(btn);
     });
 }
@@ -1114,21 +1114,21 @@ function endGame(isWin = false) {
     busy = true;
     finalScoreEl.textContent = String(score);
     const titleEl = gameOverEl.querySelector("h2");
-    
+
     if (isWin) {
         titleEl.textContent = "Level Complete!";
         playWinSound();
-        
+
         // Calculate stars
         let starsEarned = 1; // Base 1 star for winning
         const thresholds = LEVELS[currentLevelIdx].stars;
         if (score >= thresholds[1]) starsEarned = 2;
         if (score >= thresholds[2]) starsEarned = 3;
-        
+
         // Update progress
         if (!playerProgress[currentLevelIdx]) playerProgress[currentLevelIdx] = { stars: 0, unlocked: true };
         playerProgress[currentLevelIdx].stars = Math.max(playerProgress[currentLevelIdx].stars, starsEarned);
-        
+
         // Unlock next level
         if (currentLevelIdx + 1 < LEVELS.length) {
             if (!playerProgress[currentLevelIdx + 1]) {
@@ -1142,7 +1142,7 @@ function endGame(isWin = false) {
         titleEl.textContent = "Game Over";
         playLoseSound();
     }
-    
+
     gameOverEl.classList.remove("hidden");
     updateControlStates();
 }
@@ -1168,11 +1168,11 @@ function loadLevel(index) {
     }
     currentLevelIdx = index;
     const config = LEVELS[currentLevelIdx];
-    
+
     score = 0;
     movesLeft = config.moves;
     currentTarget = config.targetScore || 0;
-    
+
     levelState = {
         type: config.type,
         targetColors: config.targetColors || {},
@@ -1187,13 +1187,13 @@ function loadLevel(index) {
     board = createInitialBoard();
     renderAll();
     updateHud();
-    
+
     gameOverEl.classList.add("hidden");
-    
+
     levelTitleEl.textContent = `Level ${config.level}`;
     levelDescEl.textContent = config.desc;
     levelStartEl.classList.remove("hidden");
-    
+
     updateControlStates();
 }
 
