@@ -142,6 +142,12 @@ body {
   min-height: 28px;
 }
 
+.target-display.collect-target {
+  gap: 14px;
+  min-height: 44px;
+  font-size: 1.35rem;
+}
+
 .target-candy-wrap {
   display: flex;
   align-items: center;
@@ -149,12 +155,37 @@ body {
   font-size: 1rem;
 }
 
+.target-display.collect-target .target-candy-wrap {
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
 .target-candy {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.target-display.collect-target .target-candy {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.target-candy-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
 }
 
 h1,
@@ -435,7 +466,7 @@ button:active {
 .candy:hover {
   transform: scale(1.06);
 }
-
+/* 
 .type-0 {
   border-radius: 68% 32% 64% 36% / 52% 58% 42% 48%;
   background: radial-gradient(circle at 33% 28%, #ff7d72 0%, #ff3f35 64%, #d90d06 100%);
@@ -471,7 +502,7 @@ button:active {
   border-radius: 38% 42% 46% 44% / 44% 40% 52% 48%;
   background: radial-gradient(circle at 35% 30%, #df8eff 0%, #b03bf2 72%, #7b1cb8 100%);
   border-color: rgba(102, 24, 153, 0.45);
-}
+} */
 
 .bomb-base {
   border-radius: 50%;
@@ -645,6 +676,71 @@ button:active {
   }
 }
 
+.candy.has-art {
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.candy.has-art.type-0,
+.candy.has-art.type-1,
+.candy.has-art.type-2,
+.candy.has-art.type-3,
+.candy.has-art.type-4,
+.candy.has-art.type-5,
+.candy.has-art.bomb-base {
+  border-radius: 0;
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+}
+
+.candy.has-art::before,
+.candy.has-art.type-5::before {
+  display: none;
+}
+
+.candy.has-art.special-stripedH::before,
+.candy.has-art.special-stripedV::before {
+  display: block;
+  inset: 12%;
+  border-radius: 12px;
+  opacity: 0.7;
+}
+
+.candy.has-art.special-wrapped::before {
+  display: block;
+  inset: 18%;
+  border-radius: 10px;
+  opacity: 0.75;
+}
+
+.candy.has-art::after {
+  display: none;
+}
+
+.candy-art {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.candy.has-art.bomb-base .candy-art {
+  filter: none;
+}
+
 @keyframes pop {
   to {
     opacity: 0;
@@ -727,3 +823,4 @@ button:active {
     font-size: 0.75rem;
   }
 }
+ 

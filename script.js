@@ -1,5 +1,14 @@
 const BOARD_SIZE = 8;
-const COLORS = 6;
+const NORMAL_CANDY_IMAGE_PATHS = [
+    "images/capsule.png",
+    "images/eye_chart.png",
+    "images/eye.png",
+    "images/eyedrop.png",
+    "images/glasses.png",
+    "images/optonetrist_eyetest_glass.png"
+];
+const COLOR_BOMB_IMAGE_PATH = "images/bomb.png";
+const COLORS = NORMAL_CANDY_IMAGE_PATHS.length;
 const BASE_POINTS = 10;
 const SPECIAL_BONUS = 40;
 
@@ -140,15 +149,37 @@ function getCandyEl(row, col) {
     return getCell(row, col).firstElementChild;
 }
 
+function getCandyImagePath(color, special = null) {
+    if (special === "colorBomb") {
+        return COLOR_BOMB_IMAGE_PATH;
+    }
+    if (typeof color === "number" && color >= 0 && color < NORMAL_CANDY_IMAGE_PATHS.length) {
+        return NORMAL_CANDY_IMAGE_PATHS[color];
+    }
+    return NORMAL_CANDY_IMAGE_PATHS[NORMAL_CANDY_IMAGE_PATHS.length - 1];
+}
+
+function createCandyImage(color, special = null, className = "candy-art") {
+    const image = document.createElement("img");
+    image.className = className;
+    image.src = getCandyImagePath(color, special);
+    image.alt = "";
+    image.draggable = false;
+    return image;
+}
+
 function paintCandy(row, col, candy) {
     const candyEl = getCandyEl(row, col);
     candyEl.className = "candy";
-    candyEl.textContent = "";
+    candyEl.replaceChildren();
 
     if (!candy) {
         candyEl.classList.add("empty");
         return;
     }
+
+    candyEl.classList.add("has-art");
+    candyEl.appendChild(createCandyImage(candy.color, candy.special));
 
     if (typeof candy.color === "number") {
         candyEl.classList.add(`type-${candy.color}`);
@@ -173,6 +204,7 @@ function updateHud() {
     scoreEl.textContent = String(score);
     if (movesEl) movesEl.textContent = String(movesLeft);
     if (targetEl) {
+        targetEl.classList.toggle("collect-target", levelState.type === 'collect');
         if (levelState.type === 'score') {
             targetEl.innerHTML = String(currentTarget);
         } else if (levelState.type === 'collect') {
@@ -182,7 +214,7 @@ function updateHud() {
                 const needed = levelState.targetColors[colorStr];
                 const collected = levelState.collected[color] || 0;
                 const remaining = Math.max(0, needed - collected);
-                html += `<div class="target-candy-wrap"><div class="target-candy type-${color}"></div> ${remaining}</div>`;
+                html += `<div class="target-candy-wrap"><div class="target-candy type-${color}"><img src="${getCandyImagePath(color)}" alt="" class="target-candy-art"></div> ${remaining}</div>`;
             }
             targetEl.innerHTML = html;
         }
