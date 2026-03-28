@@ -1,13 +1,13 @@
 const BOARD_SIZE = 8;
 const NORMAL_CANDY_IMAGE_PATHS = [
-    "images/capsule.png",
-    "images/eye_chart.png",
-    "images/eye.png",
-    "images/eyedrop.png",
-    "images/glasses.png",
-    "images/optonetrist_eyetest_glass.png"
+    "images/capsule 1.svg",
+    "images/eye 1.svg",
+    "images/eye-chart-1.svg",
+    "images/eyedrop1.svg",
+    "images/Glasses.svg",
+    "images/optonetrist_eyetest_glass.svg"
 ];
-const COLOR_BOMB_IMAGE_PATH = "images/bomb.png";
+const COLOR_BOMB_IMAGE_PATH = "images/eye-chart-1.svg";
 const COLORS = NORMAL_CANDY_IMAGE_PATHS.length;
 const BASE_POINTS = 10;
 const SPECIAL_BONUS = 40;
@@ -160,6 +160,7 @@ function getCandyImagePath(color, special = null) {
 }
 
 function createCandyImage(color, special = null, className = "candy-art") {
+    if (special === "colorBomb") return null;
     const image = document.createElement("img");
     image.className = className;
     image.src = getCandyImagePath(color, special);
@@ -179,7 +180,8 @@ function paintCandy(row, col, candy) {
     }
 
     candyEl.classList.add("has-art");
-    candyEl.appendChild(createCandyImage(candy.color, candy.special));
+    const art = createCandyImage(candy.color, candy.special);
+    if (art) candyEl.appendChild(art);
 
     if (typeof candy.color === "number") {
         candyEl.classList.add(`type-${candy.color}`);
@@ -344,6 +346,24 @@ function chooseSpawnCell(cells) {
     return cells[idx];
 }
 
+function runContains(run, pos) {
+    if (!pos) return false;
+    return run.some((p) => p.row === pos.row && p.col === pos.col);
+}
+
+function chooseSpawnCellForRun(run) {
+    if (!run || !run.length) return null;
+
+    if (lastSwap) {
+        const preferred = [lastSwap.a, lastSwap.b];
+        for (const pos of preferred) {
+            if (runContains(run, pos)) return pos;
+        }
+    }
+
+    return chooseSpawnCell(run);
+}
+
 function findBestOverlap(horizontalRuns, verticalRuns) {
     const hSet = new Set();
     horizontalRuns.forEach((run) => run.forEach((p) => hSet.add(key(p.row, p.col))));
@@ -369,15 +389,22 @@ function createSpecialPlan(matches) {
     };
 
     const overlap = findBestOverlap(matches.horizontalRuns, matches.verticalRuns);
-    if (overlap) add(overlap, "wrapped");
+    if (overlap) {
+        let spawn = overlap;
+        if (lastSwap) {
+            if (overlap.row === lastSwap.a.row && overlap.col === lastSwap.a.col) spawn = lastSwap.a;
+            else if (overlap.row === lastSwap.b.row && overlap.col === lastSwap.b.col) spawn = lastSwap.b;
+        }
+        add(spawn, "wrapped");
+    }
 
     matches.horizontalRuns.forEach((run) => {
-        if (run.length >= 5) add(chooseSpawnCell(run), "colorBomb");
-        else if (run.length === 4) add(chooseSpawnCell(run), "stripedH");
+        if (run.length >= 5) add(chooseSpawnCellForRun(run), "colorBomb");
+        else if (run.length === 4) add(chooseSpawnCellForRun(run), "stripedH");
     });
     matches.verticalRuns.forEach((run) => {
-        if (run.length >= 5) add(chooseSpawnCell(run), "colorBomb");
-        else if (run.length === 4) add(chooseSpawnCell(run), "stripedV");
+        if (run.length >= 5) add(chooseSpawnCellForRun(run), "colorBomb");
+        else if (run.length === 4) add(chooseSpawnCellForRun(run), "stripedV");
     });
 
     if (lastSwap) {
